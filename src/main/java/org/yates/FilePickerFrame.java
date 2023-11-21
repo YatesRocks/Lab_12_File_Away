@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class FilePickerFrame extends JFrame {
     // CONSTANTS
@@ -84,13 +85,10 @@ public class FilePickerFrame extends JFrame {
 
     private String readFileContents(java.io.File file) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(file));
-        StringBuilder content = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            content.append(line).append("\n");
-        }
+        String content;
+        content = reader.lines().map(line -> line + "\n").collect(Collectors.joining());
         reader.close();
-        return content.toString();
+        return content;
     }
 
     private void handleIOException(IOException ex) {
