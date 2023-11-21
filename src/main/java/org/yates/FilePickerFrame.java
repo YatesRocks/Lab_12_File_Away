@@ -15,11 +15,12 @@ public class FilePickerFrame extends JFrame {
     private final JFileChooser jFileChooser = new JFileChooser();
     private final JLabel statistics = new JLabel();
 
-    private static final int TEXT_COLUMNS = 40;
+    private static final int TEXT_COLUMNS = 45;
     private static final int TEXT_ROWS = 20;
-    private static final int WINDOW_WIDTH = 500;
+    private static final int WINDOW_WIDTH = 525;
     private static final int WINDOW_HEIGHT = 600;
     private final Logger logger = Logger.getLogger(FilePickerFrame.class.getName());
+
     public FilePickerFrame() {
         setTitle("Lab 12 File Away");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -66,11 +67,11 @@ public class FilePickerFrame extends JFrame {
 
         // Display statistics in the JLabel
         String statisticsText = String.format(
-                "File Name: %s, Word Count: %d, Character Count: %d, Line Count: %d",
+                "File Name: %s, Line Count: %d, Word Count: %d, Character Count: %d",
                 jFileChooser.getSelectedFile().getName(),
+                lineCount,
                 wordCount,
-                charCount,
-                lineCount
+                charCount
         );
         statistics.setText(statisticsText);
     }
