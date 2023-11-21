@@ -13,6 +13,7 @@ import java.util.logging.Level;
 public class FilePickerFrame extends JFrame {
     private final JTextArea jTextArea = new JTextArea();
     private final JFileChooser jFileChooser = new JFileChooser();
+    private final JLabel statistics = new JLabel();
 
     private static final int TEXT_COLUMNS = 40;
     private static final int TEXT_ROWS = 20;
@@ -35,6 +36,7 @@ public class FilePickerFrame extends JFrame {
 
         getContentPane().add(jScrollPane);
         getContentPane().add(openButton);
+        getContentPane().add(statistics);
     }
 
     private void handleOpenButtonAction() {
@@ -46,12 +48,36 @@ public class FilePickerFrame extends JFrame {
                 String fileContent = readFileContents(file);
 
                 jTextArea.setText(fileContent);
+
+                displayFileStatistics(fileContent);
+
                 revalidate();
                 repaint();
             } catch (IOException e) {
                 handleIOException(e);
             }
         }
+    }
+
+    private void displayFileStatistics(String fileContent) {
+        int wordCount = getWordCount(fileContent);
+        int charCount = fileContent.length();
+        int lineCount = jTextArea.getLineCount();
+
+        // Display statistics in the JLabel
+        String statisticsText = String.format(
+                "File Name: %s, Word Count: %d, Character Count: %d, Line Count: %d",
+                jFileChooser.getSelectedFile().getName(),
+                wordCount,
+                charCount,
+                lineCount
+        );
+        statistics.setText(statisticsText);
+    }
+
+    private int getWordCount(String content) {
+        String[] words = content.split("\\s+");
+        return words.length;
     }
 
     private String readFileContents(java.io.File file) throws IOException {
