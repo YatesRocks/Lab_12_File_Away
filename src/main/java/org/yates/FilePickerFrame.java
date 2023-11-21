@@ -7,18 +7,18 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FilePickerFrame extends JFrame {
-    private final JTextArea jTextArea = new JTextArea();
-    private final JFileChooser jFileChooser = new JFileChooser();
-    private final JLabel statistics = new JLabel();
-
+    // CONSTANTS
     private static final int TEXT_COLUMNS = 45;
     private static final int TEXT_ROWS = 20;
     private static final int WINDOW_WIDTH = 525;
     private static final int WINDOW_HEIGHT = 600;
+    private final JTextArea jTextArea = new JTextArea();
+    private final JFileChooser jFileChooser = new JFileChooser();
+    private final JLabel statisticsLabel = new JLabel();
     private final Logger logger = Logger.getLogger(FilePickerFrame.class.getName());
 
     public FilePickerFrame() {
@@ -37,7 +37,7 @@ public class FilePickerFrame extends JFrame {
 
         getContentPane().add(jScrollPane);
         getContentPane().add(openButton);
-        getContentPane().add(statistics);
+        getContentPane().add(statisticsLabel);
     }
 
     private void handleOpenButtonAction() {
@@ -73,7 +73,8 @@ public class FilePickerFrame extends JFrame {
                 wordCount,
                 charCount
         );
-        statistics.setText(statisticsText);
+
+        statisticsLabel.setText(statisticsText);
     }
 
     private int getWordCount(String content) {
