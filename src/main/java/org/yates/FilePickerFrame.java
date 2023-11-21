@@ -17,13 +17,18 @@ public class FilePickerFrame extends JFrame {
     private static final int TEXT_ROWS = 20;
     private static final int WINDOW_WIDTH = 525;
     private static final int WINDOW_HEIGHT = 600;
+    private static final String WINDOW_TITLE = "Lab 12 File Away";
+
+    // UI Components
     private final JTextArea jTextArea = new JTextArea();
     private final JFileChooser jFileChooser = new JFileChooser();
     private final JLabel statisticsLabel = new JLabel();
+
     private final Logger logger = Logger.getLogger(FilePickerFrame.class.getName());
 
     public FilePickerFrame() {
-        setTitle("Lab 12 File Away");
+        // Main window UI setup
+        setTitle(WINDOW_TITLE);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setLayout(new FlowLayout());
@@ -31,6 +36,7 @@ public class FilePickerFrame extends JFrame {
         configureJTextArea();
         configureFileChooser();
 
+        // Make it scrollable for text that doesn't fit
         JScrollPane jScrollPane = new JScrollPane(jTextArea);
 
         JButton openButton = new JButton("Open File");
@@ -41,8 +47,23 @@ public class FilePickerFrame extends JFrame {
         getContentPane().add(statisticsLabel);
     }
 
+    private void configureFileChooser() {
+        // Default to only show .txt files
+        FileNameExtensionFilter nameExtensionFilter = new FileNameExtensionFilter("Text Files", "txt");
+        jFileChooser.setFileFilter(nameExtensionFilter);
+    }
+
+    private void configureJTextArea() {
+        jTextArea.setColumns(TEXT_COLUMNS);
+        jTextArea.setRows(TEXT_ROWS);
+        // If I turned this to "True" and added a save button I'd have Notepad.exe :)
+        jTextArea.setEditable(false);
+    }
+
     private void handleOpenButtonAction() {
         int returnVal = jFileChooser.showOpenDialog(this);
+        // True when user clicks "open" on the popup
+        // False when cancel is clicked or window is closed
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = jFileChooser.getSelectedFile();
             logger.log(Level.INFO, "Opening file: {0}", file.getAbsolutePath());
@@ -53,6 +74,7 @@ public class FilePickerFrame extends JFrame {
 
                 displayFileStatistics(fileContent);
 
+                // Updates UI to include file content & statistics label
                 revalidate();
                 repaint();
             } catch (IOException e) {
@@ -61,10 +83,27 @@ public class FilePickerFrame extends JFrame {
         }
     }
 
+    private String readFileContents(java.io.File file) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String content;
+        // Read: For every line in reader add a newline. Then, collect all lines into
+        // one long string.
+        content = reader.lines().map(line -> line + "\n").collect(Collectors.joining());
+        reader.close(); // ALWAYS CLOSE YOUR IO!!!
+        return content;
+    }
+
+    // don't even know what would trigger this tbh
+    private void handleIOException(IOException ex) {
+        logger.log(Level.SEVERE, "Error while reading file.", ex);
+    }
+
     private void displayFileStatistics(String fileContent) {
         int wordCount = getWordCount(fileContent);
+        // Removes all newline characters, but spaces are included in char count
         int charCount = fileContent.replaceAll("\\r\\n|\\r|\\n", "").length();
-        int lineCount = jTextArea.getLineCount() - 1; // This because a line is always appended to the end of the text stream
+        // -1 because a newline is appended to the text stream
+        int lineCount = jTextArea.getLineCount() - 1;
 
         // Display statistics in the JLabel
         String statisticsText = String.format(
@@ -79,30 +118,8 @@ public class FilePickerFrame extends JFrame {
     }
 
     private int getWordCount(String content) {
+        // Splits on whitespace
         String[] words = content.split("\\s+");
         return words.length;
-    }
-
-    private String readFileContents(java.io.File file) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        String content;
-        content = reader.lines().map(line -> line + "\n").collect(Collectors.joining());
-        reader.close();
-        return content;
-    }
-
-    private void handleIOException(IOException ex) {
-        logger.log(Level.SEVERE, "An IO exception occurred", ex);
-    }
-
-    private void configureFileChooser() {
-        FileNameExtensionFilter nameExtensionFilter = new FileNameExtensionFilter("Text Files", "txt");
-        jFileChooser.setFileFilter(nameExtensionFilter);
-    }
-
-    private void configureJTextArea() {
-        jTextArea.setColumns(TEXT_COLUMNS);
-        jTextArea.setRows(TEXT_ROWS);
-        jTextArea.setEditable(false);
     }
 }
