@@ -1,7 +1,8 @@
 package org.yates;
 
 import javax.swing.*;
-import java.awt.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -14,9 +15,12 @@ public class Main {
         JTextArea jTextArea = new JTextArea();
         jTextArea.setColumns(40);
         jTextArea.setRows(20);
+        jTextArea.setEditable(false);
         JScrollPane jScrollPane = new JScrollPane(jTextArea);
 
         JFileChooser jFileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt");
+        jFileChooser.setFileFilter(filter);
 
         openButton.addActionListener(createOpenButtonActionListener(jFrame, jFileChooser, jTextArea));
 
