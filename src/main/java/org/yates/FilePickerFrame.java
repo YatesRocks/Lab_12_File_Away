@@ -62,8 +62,8 @@ public class FilePickerFrame extends JFrame {
 
     private void displayFileStatistics(String fileContent) {
         int wordCount = getWordCount(fileContent);
-        int charCount = fileContent.length();
-        int lineCount = jTextArea.getLineCount();
+        int charCount = fileContent.replaceAll("\\r\\n|\\r|\\n", "").length();
+        int lineCount = jTextArea.getLineCount() - 1; // This because a line is always appended to the end of the text stream
 
         // Display statistics in the JLabel
         String statisticsText = String.format(
