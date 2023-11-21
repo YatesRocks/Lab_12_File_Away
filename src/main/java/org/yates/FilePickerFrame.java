@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 public class FilePickerFrame extends JFrame {
-    private final JButton openButton = new JButton("Open File");
     private final JTextArea jTextArea = new JTextArea();
     private final JFileChooser jFileChooser = new JFileChooser();
 
@@ -31,6 +30,7 @@ public class FilePickerFrame extends JFrame {
 
         JScrollPane jScrollPane = new JScrollPane(jTextArea);
 
+        JButton openButton = new JButton("Open File");
         openButton.addActionListener(e -> handleOpenButtonAction());
 
         getContentPane().add(jScrollPane);
